@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Globomantics.Core.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -20,6 +22,10 @@ namespace Globomantics.Core
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<CompanyContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("GlobomanticsDb"));
+            });
             services.AddRazorPages();
         }
 
@@ -36,12 +42,12 @@ namespace Globomantics.Core
                 options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
                 {
                     diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
-                    var user = httpContext.User.Identity;
-                    if (user != null && user.IsAuthenticated)
-                    {
-                        var userInfo = GetUserInfoFromHttpContext(user as ClaimsIdentity);
-                        diagnosticContext.Set("UserInfo", userInfo);
-                    }
+                    //var user = httpContext.User.Identity;
+                    //if (user != null && user.IsAuthenticated)
+                    //{
+                    //    var userInfo = GetUserInfoFromHttpContext(user as ClaimsIdentity);
+                    //    diagnosticContext.Set("UserInfo", userInfo);
+                    //}
                 };
             });
 

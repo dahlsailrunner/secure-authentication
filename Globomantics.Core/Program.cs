@@ -1,5 +1,8 @@
+using System;
 using System.Reflection;
+using Globomantics.Core.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -9,7 +12,11 @@ namespace Globomantics.Core
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            EnsureDatabasesCurrent(host.Services);
+
+            host.Run();
             Log.CloseAndFlush();
         }
 
@@ -28,5 +35,22 @@ namespace Globomantics.Core
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        private static void EnsureDatabasesCurrent(IServiceProvider hostServices)
+        {
+            using (var scope = hostServices.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var ctx = services.GetRequiredService<CompanyContext>();
+                    ctx.InitializeAndUpdate();
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, "Error occurred initializing the database.");
+                }
+            }
+        }
     }
 }

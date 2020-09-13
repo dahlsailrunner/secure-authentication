@@ -1,0 +1,22 @@
+﻿@page
+@model Globomantics.Core.Pages.MembersModel
+@{
+}
+
+<section class="sec_include">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 adj_text">
+                <h2>@Model.Company.Name</h2>
+                <ul class="list-group">
+                    @foreach (var member in Model.Members)
+                    {
+                        <li class="list-group-item">@member.MemberEmail</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+        

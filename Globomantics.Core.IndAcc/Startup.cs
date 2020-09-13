@@ -43,12 +43,12 @@ namespace Globomantics.Core.IndAcc
                 options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
                 {
                     diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
-                    var user = httpContext.User.Identity;
-                    if (user != null && user.IsAuthenticated)
-                    {
-                        var userInfo = GetUserInfoFromHttpContext(user as ClaimsIdentity);
-                        diagnosticContext.Set("UserInfo", userInfo);
-                    }
+                    //var user = httpContext.User.Identity;
+                    //if (user != null && user.IsAuthenticated)
+                    //{
+                    //    var userInfo = GetUserInfoFromHttpContext(user as ClaimsIdentity);
+                    //    diagnosticContext.Set("UserInfo", userInfo);
+                    //}
                 };
             });
 
