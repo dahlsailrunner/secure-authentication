@@ -16,6 +16,7 @@ namespace Globomantics.Core.IndAcc.Areas.Identity
     {
         private const string AuthenticatorKeyName = "AuthenticatorKey";
         private const string RecoveryCodesName = "RecoveryCodes";
+        private const string ProviderName = "Globomantics";
 
         public Task SetTwoFactorEnabledAsync(CustomUser user, bool enabled, CancellationToken cancellationToken)
         {
@@ -30,24 +31,27 @@ namespace Globomantics.Core.IndAcc.Areas.Identity
 
         public Task SetAuthenticatorKeyAsync(CustomUser user, string key, CancellationToken cancellationToken)
         {
-            return _db.ExecuteAsync("INSERT INTO dbo.UserToken VALUES (@UserId, @Provider, @Name, @Value)", 
-                new {user.UserId, Provider = "Globomantics", Name = AuthenticatorKeyName, Value = key});
+            return PersistUserTokenAsync(user, AuthenticatorKeyName, key);
         }
 
         public Task<string> GetAuthenticatorKeyAsync(CustomUser user, CancellationToken cancellationToken)
         {
-            if (_db.State != ConnectionState.Open)
-            {
-                _db.Open();
-            }
+            if (_db.State != ConnectionState.Open) _db.Open();
+            
             return _db.QuerySingleOrDefaultAsync<string>(
-                "SELECT Value FROM dbo.UserToken WHERE UserId = @UserId AND Name = @AuthenticatorKeyName",
-                new { user.UserId, AuthenticatorKeyName });
+                @"
+SELECT Value FROM dbo.UserToken 
+WHERE UserId = @UserId 
+AND LoginProvider = @ProviderName
+AND Name = @AuthenticatorKeyName",
+                new { user.UserId, ProviderName, AuthenticatorKeyName });
         }
 
         public Task ReplaceCodesAsync(CustomUser user, IEnumerable<string> recoveryCodes, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var key = string.Join(";", recoveryCodes);
+
+            return PersistUserTokenAsync(user, RecoveryCodesName, key);
         }
 
         public Task<bool> RedeemCodeAsync(CustomUser user, string code, CancellationToken cancellationToken)
@@ -57,11 +61,34 @@ namespace Globomantics.Core.IndAcc.Areas.Identity
 
         public async Task<int> CountCodesAsync(CustomUser user, CancellationToken cancellationToken)
         {
+            if (_db.State != ConnectionState.Open) _db.Open();
+
             var x = await _db.ExecuteScalarAsync<string>(
-                "SELECT Value FROM dbo.UserToken WHERE UserId = @UserId AND Name = @RecoveryCodesName",
-                new { user.UserId, RecoveryCodesName });
+                @"
+SELECT Value 
+FROM dbo.UserToken 
+WHERE UserId = @UserId 
+AND LoginProvider = @ProviderName
+AND Name = @RecoveryCodesName",
+                new { user.UserId, ProviderName, RecoveryCodesName });
 
             return (string.IsNullOrEmpty(x)) ? 0 : x.Split(";").Count();
+        }
+
+        private Task<int> PersistUserTokenAsync(CustomUser user, string name, string key)
+        {
+            return _db.ExecuteAsync(@"
+MERGE dbo.UserToken WITH (SERIALIZABLE) AS t
+USING (VALUES (@UserId, @ProviderName, @Name, @Key)) AS u (UserId, LoginProvider, Name, Value)
+    ON u.UserId = t.UserId
+    AND u.LoginProvider = t.LoginProvider
+    AND u.Name = t.Name
+WHEN MATCHED THEN 
+    UPDATE SET t.Value = u.Value
+WHEN NOT MATCHED THEN
+    INSERT (UserId, LoginProvider, Name, Value) 
+    VALUES (u.UserId, u.LoginProvider, u.Name, u.Value);",
+                new { user.UserId, ProviderName, name, key });
         }
     }
 }

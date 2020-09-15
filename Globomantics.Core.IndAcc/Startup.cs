@@ -46,7 +46,9 @@ namespace Globomantics.Core.IndAcc
                 .AddSignInManager<SignInManager<CustomUser>>()
                 .AddUserManager<UserManager<CustomUser>>()
                 .AddUserStore<CustomUserStore>()
-                .AddDefaultTokenProviders()
+                .AddTokenProvider<DataProtectorTokenProvider<CustomUser>>(TokenOptions.DefaultProvider)
+                .AddTokenProvider<EmailTokenProvider<CustomUser>>(TokenOptions.DefaultEmailProvider)  // not including phone number provider
+                .AddTokenProvider<AuthenticatorTokenProvider<CustomUser>>(TokenOptions.DefaultAuthenticatorProvider)
                 .AddDefaultUI();
 
             services.AddRazorPages();

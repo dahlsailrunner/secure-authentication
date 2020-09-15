@@ -10,7 +10,8 @@ using Serilog;
 
 namespace Globomantics.Core.IndAcc.Areas.Identity
 {
-    public partial class CustomUserStore : IUserPasswordStore<CustomUser>
+    public partial class CustomUserStore : IUserPasswordStore<CustomUser>,
+                                           IUserEmailStore<CustomUser>
     {
         private readonly IDbConnection _db;
 
@@ -66,7 +67,7 @@ SET PasswordHash = @PasswordHash
    ,CreateDate = @CreateDate
    ,Status = @Status
    ,AccessFailedCount = @AccessFailedCount
-   ,LockoutEnd = @LockoutEnd,
+   ,LockoutEnd = @LockoutEnd
    ,TwoFactorEnabled = @TwoFactorEnabled
 WHERE UserId = @UserId",
                     user);
@@ -116,6 +117,42 @@ WHERE UserId = @UserId",
         public Task<bool> HasPasswordAsync(CustomUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
+        }
+       
+        public Task SetEmailAsync(CustomUser user, string email, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetEmailAsync(CustomUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Email);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(CustomUser user, CancellationToken cancellationToken)
+        {
+            //TODO: implement this
+            return Task.FromResult(true);
+        }
+
+        public Task SetEmailConfirmedAsync(CustomUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CustomUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            return FindByNameAsync(normalizedEmail, cancellationToken);
+        }
+
+        public Task<string> GetNormalizedEmailAsync(CustomUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.NormalizedEmail);
+        }
+
+        public Task SetNormalizedEmailAsync(CustomUser user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
 
         public void Dispose() { }
