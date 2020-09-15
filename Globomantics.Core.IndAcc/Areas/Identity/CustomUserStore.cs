@@ -66,7 +66,8 @@ SET PasswordHash = @PasswordHash
    ,CreateDate = @CreateDate
    ,Status = @Status
    ,AccessFailedCount = @AccessFailedCount
-   ,LockoutEnd = @LockoutEnd
+   ,LockoutEnd = @LockoutEnd,
+   ,TwoFactorEnabled = @TwoFactorEnabled
 WHERE UserId = @UserId",
                     user);
                 result = IdentityResult.Success;
