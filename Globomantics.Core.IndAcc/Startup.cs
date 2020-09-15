@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
+using Globomantics.Core.IndAcc.Areas.Identity;
+using Globomantics.Core.IndAcc.Areas.Identity.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Globomantics.Core.IndAcc.Data;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -23,11 +26,29 @@ namespace Globomantics.Core.IndAcc
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IDbConnection, SqlConnection>(db => 
+                new SqlConnection(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            }).AddIdentityCookies();
+
+            services.AddScoped<IPasswordHasher<CustomUser>, CustomPasswordHasher>();
+
+            services.AddIdentityCore<CustomUser>(options =>
+                {
+                    options.Lockout.MaxFailedAccessAttempts = 5;
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                })
+                .AddSignInManager<SignInManager<CustomUser>>()
+                .AddUserManager<UserManager<CustomUser>>()
+                .AddUserStore<CustomUserStore>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
+
             services.AddRazorPages();
         }
 
