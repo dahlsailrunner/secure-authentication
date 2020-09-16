@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
-using Globomantics.Core.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -22,10 +22,9 @@ namespace Globomantics.Core
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CompanyContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("GlobomanticsDb"));
-            });
+            services.AddScoped<IDbConnection, SqlConnection>(db =>
+                new SqlConnection(Configuration.GetConnectionString("GlobomanticsDb")));
+            
             services.AddRazorPages();
         }
 

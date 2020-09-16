@@ -10,6 +10,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A56FDF3-145F-45C6-A1F1-C95F16286DA6}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		sql-scripts\Setup.sql = sql-scripts\Setup.sql
+		sql-scripts\Upgrade.sql = sql-scripts\Upgrade.sql
 	EndProjectSection
 EndProject
 Global

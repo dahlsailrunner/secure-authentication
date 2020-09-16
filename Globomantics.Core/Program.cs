@@ -12,11 +12,7 @@ namespace Globomantics.Core
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-
-            EnsureDatabasesCurrent(host.Services);
-
-            host.Run();
+            CreateHostBuilder(args).Build().Run();
             Log.CloseAndFlush();
         }
 
@@ -35,22 +31,5 @@ namespace Globomantics.Core
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        private static void EnsureDatabasesCurrent(IServiceProvider hostServices)
-        {
-            using (var scope = hostServices.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var ctx = services.GetRequiredService<CompanyContext>();
-                    ctx.InitializeAndUpdate();
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e, "Error occurred initializing the database.");
-                }
-            }
-        }
     }
 }
