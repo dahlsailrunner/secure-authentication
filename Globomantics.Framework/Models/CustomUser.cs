@@ -1,0 +1,38 @@
+﻿using System;
+using System.Reflection.Emit;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+
+namespace Globomantics.Framework.Models
+{
+    public class CustomUser : IdentityUser<int, IdentityUserLogin<int>, IdentityUserRole<int>, IdentityUserClaim<int>>
+    {
+        public int UserId { get; set; }
+        public string LoginName { get; set; }
+        public string PasswordSalt { get; set; }
+        public short Status { get; set; }
+        public DateTime PasswordModifiedDate { get; set; }
+        public DateTime? LastLoginDate { get; set; }
+        public DateTime CreateDate { get; set; }
+
+        public override int Id => UserId;
+        public override string UserName => LoginName;
+
+        public DateTimeOffset LockoutEnd { get; set; }
+
+        public ClaimsIdentity GenerateUserIdentity(ApplicationUserManager manager)
+        {
+            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
+            var userIdentity = manager.CreateIdentity(this, DefaultAuthenticationTypes.ApplicationCookie);
+            // Add custom user claims here
+            return userIdentity;
+        }
+
+        public Task<ClaimsIdentity> GenerateUserIdentityAsync(ApplicationUserManager manager)
+        {
+            return Task.FromResult(GenerateUserIdentity(manager));
+        }
+    }
+}

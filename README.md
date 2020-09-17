@@ -65,3 +65,10 @@ log entries that get created during development!
 
 **NOTE:** If you want to write to a different Serilog sink, just modify the 
 code in `Program.cs` in any of the projects.
+
+## Initial Users
+The database creation logic above will create the following users:
+* rr@acme.com / `l00neyTunes!`
+* wile@acme.com / `l00neyTunes!`
+* kim@mars.com / `to1nfinity!`
+* stanley@mars.com / `to1nfinity!`	

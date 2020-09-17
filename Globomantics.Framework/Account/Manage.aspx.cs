@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Owin;
-using Globomantics.Framework.Models;
 
 namespace Globomantics.Framework.Account
 {
@@ -22,7 +15,7 @@ namespace Globomantics.Framework.Account
 
         private bool HasPassword(ApplicationUserManager manager)
         {
-            return manager.HasPassword(User.Identity.GetUserId());
+            return manager.HasPassword(User.Identity.GetUserId<int>());
         }
 
         public bool HasPhoneNumber { get; private set; }
@@ -37,14 +30,14 @@ namespace Globomantics.Framework.Account
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-            HasPhoneNumber = String.IsNullOrEmpty(manager.GetPhoneNumber(User.Identity.GetUserId()));
+            HasPhoneNumber = String.IsNullOrEmpty(manager.GetPhoneNumber(User.Identity.GetUserId<int>()));
 
             // Enable this after setting up two-factor authentientication
             //PhoneNumber.Text = manager.GetPhoneNumber(User.Identity.GetUserId()) ?? String.Empty;
 
-            TwoFactorEnabled = manager.GetTwoFactorEnabled(User.Identity.GetUserId());
+            TwoFactorEnabled = manager.GetTwoFactorEnabled(User.Identity.GetUserId<int>());
 
-            LoginsCount = manager.GetLogins(User.Identity.GetUserId()).Count;
+            LoginsCount = manager.GetLogins(User.Identity.GetUserId<int>()).Count;
 
             var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
 
@@ -94,12 +87,12 @@ namespace Globomantics.Framework.Account
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
-            var result = manager.SetPhoneNumber(User.Identity.GetUserId(), null);
+            var result = manager.SetPhoneNumber(User.Identity.GetUserId<int>(), null);
             if (!result.Succeeded)
             {
                 return;
             }
-            var user = manager.FindById(User.Identity.GetUserId());
+            var user = manager.FindById(User.Identity.GetUserId<int>());
             if (user != null)
             {
                 signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
@@ -111,7 +104,7 @@ namespace Globomantics.Framework.Account
         protected void TwoFactorDisable_Click(object sender, EventArgs e)
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            manager.SetTwoFactorEnabled(User.Identity.GetUserId(), false);
+            manager.SetTwoFactorEnabled(User.Identity.GetUserId<int>(), false);
 
             Response.Redirect("/Account/Manage");
         }
@@ -120,7 +113,7 @@ namespace Globomantics.Framework.Account
         protected void TwoFactorEnable_Click(object sender, EventArgs e)
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            manager.SetTwoFactorEnabled(User.Identity.GetUserId(), true);
+            manager.SetTwoFactorEnabled(User.Identity.GetUserId<int>(), true);
 
             Response.Redirect("/Account/Manage");
         }

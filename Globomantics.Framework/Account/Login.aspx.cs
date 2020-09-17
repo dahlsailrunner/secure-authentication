@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Web;
 using System.Web.UI;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Owin;
-using Globomantics.Framework.Models;
+using Serilog;
 
 namespace Globomantics.Framework.Account
 {
@@ -16,6 +14,9 @@ namespace Globomantics.Framework.Account
             // Enable this once you have account confirmation enabled for password reset functionality
             //ForgotPasswordHyperLink.NavigateUrl = "Forgot";
             OpenAuthLogin.ReturnUrl = Request.QueryString["ReturnUrl"];
+
+            Log.Information("Login page rendering");
+
             var returnUrl = HttpUtility.UrlEncode(Request.QueryString["ReturnUrl"]);
             if (!String.IsNullOrEmpty(returnUrl))
             {
@@ -34,7 +35,6 @@ namespace Globomantics.Framework.Account
                 // This doen't count login failures towards account lockout
                 // To enable password failures to trigger lockout, change to shouldLockout: true
                 var result = signinManager.PasswordSignIn(Email.Text, Password.Text, RememberMe.Checked, shouldLockout: false);
-
                 switch (result)
                 {
                     case SignInStatus.Success:

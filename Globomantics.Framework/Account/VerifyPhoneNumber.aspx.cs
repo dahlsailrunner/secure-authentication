@@ -15,7 +15,7 @@ namespace Globomantics.Framework.Account
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var phonenumber = Request.QueryString["PhoneNumber"];
-            var code = manager.GenerateChangePhoneNumberToken(User.Identity.GetUserId(), phonenumber);           
+            var code = manager.GenerateChangePhoneNumberToken(User.Identity.GetUserId<int>(), phonenumber);           
             PhoneNumber.Value = phonenumber;
         }
 
@@ -30,11 +30,11 @@ namespace Globomantics.Framework.Account
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
 
-            var result = manager.ChangePhoneNumber(User.Identity.GetUserId(), PhoneNumber.Value, Code.Text);
+            var result = manager.ChangePhoneNumber(User.Identity.GetUserId<int>(), PhoneNumber.Value, Code.Text);
 
             if (result.Succeeded)
             {
-                var user = manager.FindById(User.Identity.GetUserId());
+                var user = manager.FindById(User.Identity.GetUserId<int>());
 
                 if (user != null)
                 {

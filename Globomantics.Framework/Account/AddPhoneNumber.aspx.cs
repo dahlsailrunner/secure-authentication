@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using System.Threading.Tasks;
-using Globomantics.Framework.Models;
 
 namespace Globomantics.Framework.Account
 {
@@ -16,7 +10,7 @@ namespace Globomantics.Framework.Account
         protected void PhoneNumber_Click(object sender, EventArgs e)
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var code = manager.GenerateChangePhoneNumberToken(User.Identity.GetUserId(), PhoneNumber.Text);
+            var code = manager.GenerateChangePhoneNumberToken(User.Identity.GetUserId<int>(), PhoneNumber.Text);
             if (manager.SmsService != null)
             {
                 var message = new IdentityMessage

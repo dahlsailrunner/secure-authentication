@@ -19,8 +19,8 @@ namespace Globomantics.Framework.Account
         protected void Page_Load(object sender, EventArgs e)
         {
             string code = IdentityHelper.GetCodeFromRequest(Request);
-            string userId = IdentityHelper.GetUserIdFromRequest(Request);
-            if (code != null && userId != null)
+            int userId = IdentityHelper.GetUserIdFromRequest(Request);
+            if (code != null && userId != 0)
             {
                 var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
                 var result = manager.ConfirmEmail(userId, code);
