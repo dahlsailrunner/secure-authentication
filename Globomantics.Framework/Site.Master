@@ -1,0 +1,203 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="Globomantics.Framework.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Globomantics</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <link href="/Content/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="/Content/style-home.css" rel="stylesheet">
+    <link href="/Content/images/G.png" rel="shortcut icon" type="image/x-icon" />
+
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+        
+            <div id="wrapper">
+        <header>
+            <div class="container">
+                <div class="logo col-md-5 col-sm-5 col-xs-8">
+                    <a href="/"><img src="/Content/images/Globo-Logo-white.svg" alt="logo" /></a><span class="text">MANIACALLY TAKING TECH TO THE GLOBE</span>
+                </div>
+                <div class="mobile-togle col-md-12 col-sm-12 col-xs-12">
+                    <nav class="navbar navbar-default" role="navigation">
+                        <div class="navbar-header">
+                            <button type="button" id="hamburger" class="navbar-toggle x collapsed" data-toggle="collapse" data-target="#navbar-collapse-x">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#top"></a>
+                        </div>
+
+                        <div class="collapse navbar-collapse" id="navbar-collapse-x">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li>
+                                    <div class="search1">
+                                        <button type="submit"><i class="fa fa-search"></i></button> <input type="text" class="form-control" placeholder="Search">
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <ul class="navbar-nav mr-auto">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="OurStory">Our story<span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Brands</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link disabled" href="robotics.html">Robotics</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link disabled" href="media.html">Media</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link disabled" href="#">Support</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div><!-- .navbar-collapse -->
+                    </nav>
+                </div>
+
+                <div class="right_section col-md-5 col-xs-12">
+                    <div class="search">
+                        <button type="submit"><i class="fa fa-search"></i></button> <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="/OurStory">Our story<span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Brands</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link disabled" href="robotics.html">Robotics</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link disabled" href="media.html">Media</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link disabled" href="#">Support</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            <div class="sign">
+                <asp:LoginView runat="server" ViewStateMode="Disabled">
+                    <AnonymousTemplate>
+                        <a href="/Account/Login">
+                            <img class="sign-in-img" src="/Content/images/avatar.svg" alt="sign-in">
+                            Sign-in
+                        </a>
+                    </AnonymousTemplate>
+                    <LoggedInTemplate>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%: Context.User.Identity.GetUserName()  %> <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a runat="server" href="~/Account/Manage" title="Manage your account">Manage Account</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
+                                </li>
+                            </ul>
+                        </li>
+                    </LoggedInTemplate>
+                </asp:LoginView>
+            </div>
+            </div>
+        </header>
+    </div>
+
+
+        <section class="sec_include">
+        <div class="container body-content">
+
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            </div>
+        </section>
+
+            <%--<hr />--%>
+            <footer>
+                <div class="container">
+                    <div class="main-footer col-md-12 col-xs-12">
+                        <div class="foter-logo col-md-3 col-sm-3 col-xs-2">
+                            <a asp-page="Index">
+                                <img class="desktop" src="/Content/images/Globo-Logo-white-footer.svg"><img class="mobileImg" src="/Content/images/G.png">
+                            </a>
+                        </div>
+                        <div class="links col-md-5 col-md-5 col-xs-10">
+                            <ul class="quick-links col-md-4 col-xs-6">
+
+                                <li><a asp-page="OurStory">Our Story</a></li>
+                                <li><a href="#">Brands</a></li>
+                                <li><a href="robotics.html">Robotics</a></li>
+                                <li><a href="media.html">Media</a></li>
+                                <li><a href="#">Support</a></li>
+                            </ul>
+                            <ul class="quick-links second-row col-md-4 col-xs-6">
+
+                                <li><a href="#">Careers</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Media Inquiries</a></li>
+                                <li><a href="#">Help</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div><!---container-->
+                <div class="video-sec col-md-4 col-sm-12 col-xs-12">
+                    <h1 class="video-heading text-center"><img src="/Content/images/pluralsight-white.png"></h1>
+                    <span class="border"></span>
+                    <p class="footer-p">This site is created for demonstrative purposes only and does not offer any real products or services.<p>
+                </div>
+            </footer>
+    </form>
+
+
+<script>
+    jQuery(document).ready(function () {
+        jQuery("#hamburger").click(function () {
+            jQuery("header").toggleClass("fixed");
+        });
+    });
+</script>
+</body>
+</html>
