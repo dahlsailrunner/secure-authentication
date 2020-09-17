@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using System.Web.UI;
+using Globomantics.Framework.Models;
 using Microsoft.AspNet.Identity.Owin;
 using Serilog;
 

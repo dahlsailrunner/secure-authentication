@@ -6,7 +6,6 @@ namespace Globomantics.Framework.Models
 {
     public class CustomPasswordHasher : PasswordHasher
     {
-
         public override PasswordVerificationResult VerifyHashedPassword(string hashedPassword, string providedPassword)
         {
             if (hashedPassword.Contains("|"))
