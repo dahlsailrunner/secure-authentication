@@ -1,25 +1,35 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using Globomantics.Core.Identity
+@using Microsoft.AspNetCore.Identity
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<CustomUser> SignInManager
+@inject UserManager<CustomUser> UserManager
 
-@if (SignInManager.IsSignedIn(User))
-{
-    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+<div class="sign-in col-md-2">
+    <span class="dvider"></span>
+    <div class="sign">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" 
+                   aria-haspopup="true" aria-expanded="false">@User.Identity.Name <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new {area = ""})" method="post">
+                            <button type="submit" class="nav-link btn btn-link">Logout</button>
+                        </form>
+                    </li>
+
+                </ul>
             </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
-            </li>
-        </ul>
-    </form>
-}
-else
-{
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-        <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
-    </ul>
-}
+        }
+        else
+        {
+            <a asp-area="Identity" asp-page="/Account/Login">
+                <img class="sign-in-img" src="/images/avatar.svg" alt="sign-in">
+                Sign-in
+            </a>
+        }
+    </div>
+</div>
