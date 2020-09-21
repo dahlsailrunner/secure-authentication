@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using Microsoft.AspNet.Identity;
 
-namespace Globomantics.Framework.Models
+namespace Globomantics.Framework.Identity
 {
     public class CustomPasswordHasher : PasswordHasher
     {

@@ -1,4 +1,6 @@
+using System;
 using System.Data;
+using System.Net.Http;
 using Globomantics.Core.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Polly;
 using Serilog;
 
 namespace Globomantics.Core
@@ -30,14 +34,28 @@ namespace Globomantics.Core
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             }).AddIdentityCookies();
 
+            const int considerPwned = 1000;
+            services.AddPwnedPasswordHttpClient(minimumFrequencyToConsiderPwned: considerPwned)
+                .AddTransientHttpErrorPolicy(p => p.RetryAsync(3))
+                .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(1)));
+
             services.AddScoped<IPasswordHasher<CustomUser>, CustomPasswordHasher>();
+
+            services.AddTransient<IConfigureOptions<IdentityOptions>, CustomIdentityOptions>();
 
             services.AddIdentityCore<CustomUser>()
                 .AddSignInManager<SignInManager<CustomUser>>()
                 .AddUserManager<UserManager<CustomUser>>()
                 .AddUserStore<CustomUserStore>()
                 .AddDefaultTokenProviders()
-                .AddDefaultUI();
+                .AddDefaultUI()
+                .AddPwnedPasswordValidator<CustomUser>(options =>
+                {
+                    options.ErrorMessage = 
+                        $"Cannot use passwords that have been pwned more than {considerPwned} times.";
+                })
+                .AddPasswordValidator<CustomPasswordValidator>()
+                .AddUserValidator<CustomUserValidator>();
 
             services.AddRazorPages();
         }

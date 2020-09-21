@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 
-namespace Globomantics.Framework.Models
+namespace Globomantics.Framework.Identity
 {
     public partial class CustomUserStore : IUserLockoutStore<CustomUser, int>
     {

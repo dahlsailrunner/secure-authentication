@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
-using Globomantics.Framework.Models;
+using Globomantics.Framework.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 

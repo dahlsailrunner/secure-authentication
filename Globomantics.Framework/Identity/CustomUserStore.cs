@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNet.Identity;
 using Serilog;
 
-namespace Globomantics.Framework.Models
+namespace Globomantics.Framework.Identity
 {
-    public partial class CustomUserStore : IUserPasswordStore<CustomUser, int>,
-                                   IUserEmailStore<CustomUser, int>
+    public partial class CustomUserStore : IUserPasswordStore<CustomUser, int>, 
+                                           IUserEmailStore<CustomUser, int>, 
+                                           IUserSecurityStampStore<CustomUser, int>
     {
         private readonly IDbConnection _db;
 
@@ -18,9 +18,17 @@ namespace Globomantics.Framework.Models
             _db = db;
         }
 
-        public Task CreateAsync(CustomUser user)
+        public async Task CreateAsync(CustomUser user)
         {
-            throw new NotImplementedException();
+            user.CreateDate = DateTime.Now;
+            user.PasswordModifiedDate = user.CreateDate;
+            await _db.ExecuteAsync(
+                @"
+INSERT INTO GlobomanticsUser 
+( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp )
+VALUES
+( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp )",
+                user);
         }
 
         public async Task UpdateAsync(CustomUser user)
@@ -40,6 +48,7 @@ SET PasswordHash = @PasswordHash
    ,AccessFailedCount = @AccessFailedCount
    ,LockoutEnd = @LockoutEnd
    ,TwoFactorEnabled = @TwoFactorEnabled
+   ,SecurityStamp = @SecurityStamp
 WHERE UserId = @UserId",
                     user);
             }
@@ -56,16 +65,14 @@ WHERE UserId = @UserId",
 
         public async Task<CustomUser> FindByIdAsync(int userId)
         {
-            var user = await _db.QueryAsync<CustomUser>("SELECT * FROM GlobomanticsUser WHERE UserId = @userId",
+            return await _db.QuerySingleOrDefaultAsync<CustomUser>("SELECT * FROM GlobomanticsUser WHERE UserId = @userId",
                 new { userId });
-            return user.SingleOrDefault();
         }
 
         public async Task<CustomUser> FindByNameAsync(string userName)
         {
-            var user = await _db.QueryAsync<CustomUser>("SELECT * FROM GlobomanticsUser WHERE LoginName = @LoginName",
+            return await _db.QuerySingleOrDefaultAsync<CustomUser>("SELECT * FROM GlobomanticsUser WHERE LoginName = @LoginName",
                 new { LoginName = userName });
-            return user.SingleOrDefault();
         }
 
         public Task SetPasswordHashAsync(CustomUser user, string passwordHash)
@@ -95,7 +102,7 @@ WHERE UserId = @UserId",
 
         public Task<string> GetEmailAsync(CustomUser user)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.LoginName);
         }
 
         public Task<bool> GetEmailConfirmedAsync(CustomUser user)
@@ -110,8 +117,19 @@ WHERE UserId = @UserId",
 
         public Task<CustomUser> FindByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            return FindByNameAsync(email);
         }
         public void Dispose() { }
+
+        public Task SetSecurityStampAsync(CustomUser user, string stamp)
+        {
+            user.SecurityStamp = stamp;
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetSecurityStampAsync(CustomUser user)
+        {
+            return Task.FromResult(user.SecurityStamp);
+        }
     }
 }

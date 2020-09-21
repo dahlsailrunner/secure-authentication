@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Web;
+using Globomantics.Framework.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Owin;
-using Globomantics.Framework.Models;
 
 namespace Globomantics.Framework.Account
 {

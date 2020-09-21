@@ -3,11 +3,11 @@ using System.Data;
 using System.Data.Entity.SqlServer.Utilities;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Globomantics.Framework.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Globomantics.Framework.Models;
 
 namespace Globomantics.Framework
 {
@@ -39,23 +39,12 @@ namespace Globomantics.Framework
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
-            var manager = new ApplicationUserManager(new CustomUserStore(context.Get<IDbConnection>()));
-            // Configure validation logic for usernames
-            manager.UserValidator = new UserValidator<CustomUser, int>(manager)
-            {
-                AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
-            };
-
-            // Configure validation logic for passwords
-            manager.PasswordValidator = new PasswordValidator
-            {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
-            };
+            var db = context.Get<IDbConnection>();
+            var manager = new ApplicationUserManager(new CustomUserStore(db));
+            
+            // Configure custom validation
+            manager.UserValidator = new CustomUserValidator(manager, db);
+            manager.PasswordValidator = new CustomPasswordValidator();
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.

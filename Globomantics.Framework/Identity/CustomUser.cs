@@ -1,10 +1,10 @@
 ﻿using System;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Globomantics.Framework.Models
+namespace Globomantics.Framework.Identity
 {
     public class CustomUser : IdentityUser<int, IdentityUserLogin<int>, IdentityUserRole<int>, IdentityUserClaim<int>>
     {
@@ -17,7 +17,11 @@ namespace Globomantics.Framework.Models
         public DateTime CreateDate { get; set; }
 
         public override int Id => UserId;
-        public override string UserName => LoginName;
+        public override string UserName
+        {
+            get => LoginName;
+            set => LoginName = value;
+        }
 
         public DateTimeOffset LockoutEnd { get; set; }
 

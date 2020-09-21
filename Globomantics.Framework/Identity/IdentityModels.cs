@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web;
 
-namespace Globomantics.Framework.Models
+namespace Globomantics.Framework.Identity
 {
     public static class IdentityHelper
     {

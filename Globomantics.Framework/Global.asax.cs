@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Web;
 using System.Web.Optimization;
@@ -19,7 +18,9 @@ namespace Globomantics.Framework
 
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.AppSettings()
-                .Enrich.WithRequest()
+                .Enrich.WithHttpRequestId()
+                .Enrich.WithHttpRequestNumber()
+                .Enrich.WithUserName()
                 .Enrich.WithProperty("Assembly", name)
                 .WriteTo.Seq("http://localhost:5341")
                 .CreateLogger();

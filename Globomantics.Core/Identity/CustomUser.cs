@@ -12,6 +12,7 @@ namespace Globomantics.Core.Identity
         public DateTime? LastLoginDate { get; set; }
         public DateTime CreateDate { get; set; }
         public short Status { get; set; }
+
         public override int Id => UserId;
         public override string NormalizedEmail => LoginName.ToUpperInvariant();
         public override string Email => LoginName;
