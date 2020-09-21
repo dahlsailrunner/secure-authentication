@@ -72,3 +72,35 @@ The database creation logic above will create the following users:
 * wile@acme.com / `l00neyTunes!`
 * kim@mars.com / `to1nfinity!`
 * stanley@mars.com / `to1nfinity!`	
+
+# `CustomUserStore` Notes
+## Using a `partial` class 
+By using a `partial` class with the `CustomUserStore` different interfaces can 
+be implemented in different files, keeping individual files smaller and focused 
+on narrower areas. This approach, for example, lets us keep basic functionality 
+like passwords in one file, and details of two-factor authencation in a separate 
+file.
+
+## Custom Password Hashing
+The approach taken in these projects allows for "legacy" passwords to be validated
+and then re-hashed to use the current hashing technique within ASP.NET (Core or 
+Framework).  The approach is described very well by Andrew Lock in this blog post:
+
+https://andrewlock.net/exploring-the-asp-net-core-identity-passwordhasher/
+
+## Pwned Password Validation
+A "pwned" (pronounced "poaned") password is one that has been compromised in some 
+kind of breach and should be considered a vulnerable password.  
+
+Both the ASP.NET Core and ASP.NET Framework projects validate new values for passwords
+against the [Pwned Passwords API](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/).
+
+In both cases, NuGet packages are used to facilitate the validation - which does NOT 
+send actual passwords to the API but rather hashed values.
+
+For ASP.NET Core: https://github.com/andrewlock/PwnedPasswords
+For ASP.NET Framework: https://github.com/mjashton/PwnedClient
+
+**.NET Framework Note:** There is a single `PasswordValidator` on the Framework 
+version of the `UserManager` class. So any custom validator you create should perform
+ALL of the validations you want done on passwords.
