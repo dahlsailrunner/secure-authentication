@@ -25,9 +25,9 @@ namespace Globomantics.Framework.Identity
             await _db.ExecuteAsync(
                 @"
 INSERT INTO GlobomanticsUser 
-( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp )
+( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp, EmailConfirmed )
 VALUES
-( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp )",
+( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp, @EmailConfirmed )",
                 user);
         }
 
@@ -44,11 +44,9 @@ SET PasswordHash = @PasswordHash
    ,PasswordModifiedDate = @PasswordModifiedDate
    ,LastLoginDate = @LastLoginDate
    ,CreateDate = @CreateDate
-   ,Status = @Status
-   ,AccessFailedCount = @AccessFailedCount
-   ,LockoutEnd = @LockoutEnd
-   ,TwoFactorEnabled = @TwoFactorEnabled
+   ,Status = @Status   
    ,SecurityStamp = @SecurityStamp
+   ,EmailConfirmed = @EmailConfirmed
 WHERE UserId = @UserId",
                     user);
             }
@@ -97,7 +95,7 @@ WHERE UserId = @UserId",
 
         public Task SetEmailAsync(CustomUser user, string email)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task<string> GetEmailAsync(CustomUser user)
@@ -107,12 +105,13 @@ WHERE UserId = @UserId",
 
         public Task<bool> GetEmailConfirmedAsync(CustomUser user)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.EmailConfirmed);
         }
 
         public Task SetEmailConfirmedAsync(CustomUser user, bool confirmed)
         {
-            throw new NotImplementedException();
+            user.EmailConfirmed = confirmed;
+            return Task.CompletedTask;
         }
 
         public Task<CustomUser> FindByEmailAsync(string email)

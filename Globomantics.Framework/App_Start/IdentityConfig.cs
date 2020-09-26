@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Entity.SqlServer.Utilities;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Globomantics.Framework.Identity;
@@ -15,7 +16,18 @@ namespace Globomantics.Framework
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("donotreply@globomantics.com"),
+                Subject = message.Subject,
+                Body = message.Body,
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(new MailAddress(message.Destination));
+            using (var client = new SmtpClient("localhost", 25))
+            {
+                client.Send(mailMessage);
+            }
             return Task.FromResult(0);
         }
     }
@@ -57,6 +69,7 @@ namespace Globomantics.Framework
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
             });
+
 
             // Configure user lockout defaults
             manager.UserLockoutEnabledByDefault = true;

@@ -5,6 +5,7 @@ using Globomantics.Core.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,8 @@ namespace Globomantics.Core
             services.AddScoped<IDbConnection, SqlConnection>(db =>
                 new SqlConnection(Configuration.GetConnectionString("GlobomanticsDb")));
 
+            
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -38,7 +41,6 @@ namespace Globomantics.Core
             services.AddPwnedPasswordHttpClient(minimumFrequencyToConsiderPwned: considerPwned)
                 .AddTransientHttpErrorPolicy(p => p.RetryAsync(3))
                 .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(1)));
-
             services.AddScoped<IPasswordHasher<CustomUser>, CustomPasswordHasher>();
 
             services.AddTransient<IConfigureOptions<IdentityOptions>, CustomIdentityOptions>();
@@ -56,6 +58,15 @@ namespace Globomantics.Core
                 })
                 .AddPasswordValidator<CustomPasswordValidator>()
                 .AddUserValidator<CustomUserValidator>();
+
+            // You should likely read the hard-coded string values below from configuration
+            services.AddTransient<IEmailSender>(s => new CustomEmailSender(
+                "localhost", 25, "donotreply@globomantics.com"));
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(1);
+            });
 
             services.AddRazorPages();
         }

@@ -13,6 +13,9 @@ namespace Globomantics.Core.Identity
             options.Password.RequireUppercase = true;
             options.Password.RequireNonAlphanumeric = true;
             options.Password.RequiredUniqueChars = 1;
+
+            options.SignIn.RequireConfirmedEmail = true;
+            options.SignIn.RequireConfirmedAccount = true;
         }
     }
 }

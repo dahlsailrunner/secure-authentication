@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		sql-scripts\Setup.sql = sql-scripts\Setup.sql
 		sql-scripts\Upgrade.sql = sql-scripts\Upgrade.sql
 		sql-scripts\Upgrade1-AddSecurityStamp.sql = sql-scripts\Upgrade1-AddSecurityStamp.sql
+		sql-scripts\Upgrade2-AddEmailConfirmed.sql = sql-scripts\Upgrade2-AddEmailConfirmed.sql
 	EndProjectSection
 EndProject
 Global

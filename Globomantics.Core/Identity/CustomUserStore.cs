@@ -92,9 +92,9 @@ namespace Globomantics.Core.Identity
                 await _db.ExecuteAsync(
                     @"
 INSERT INTO GlobomanticsUser 
-( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp )
+( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp, EmailConfirmed )
 VALUES
-( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp )",
+( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp, @EmailConfirmed )",
                     user);
                 result = IdentityResult.Success;
 
@@ -129,6 +129,7 @@ SET PasswordHash = @PasswordHash
    ,CreateDate = @CreateDate
    ,Status = @Status
    ,SecurityStamp = @SecurityStamp
+   ,EmailConfirmed = @EmailConfirmed
 WHERE UserId = @UserId",
                     user);
                 result = IdentityResult.Success;
@@ -233,13 +234,25 @@ WHERE UserId = @UserId",
 
         public Task<bool> GetEmailConfirmedAsync(CustomUser user, CancellationToken cancellationToken)
         {
-            //TODO: implement this
-            return Task.FromResult(true);
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.EmailConfirmed);
         }
 
         public Task SetEmailConfirmedAsync(CustomUser user, bool confirmed, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.EmailConfirmed = confirmed;
+            return Task.CompletedTask;
         }
 
         public Task<CustomUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
