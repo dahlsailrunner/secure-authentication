@@ -29,8 +29,6 @@ namespace Globomantics.Core
             services.AddScoped<IDbConnection, SqlConnection>(db =>
                 new SqlConnection(Configuration.GetConnectionString("GlobomanticsDb")));
 
-            
-
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -49,7 +47,10 @@ namespace Globomantics.Core
                 .AddSignInManager<SignInManager<CustomUser>>()
                 .AddUserManager<UserManager<CustomUser>>()
                 .AddUserStore<CustomUserStore>()
-                .AddDefaultTokenProviders()
+                // not including phone number provider
+                .AddTokenProvider<DataProtectorTokenProvider<CustomUser>>(TokenOptions.DefaultProvider)
+                .AddTokenProvider<EmailTokenProvider<CustomUser>>(TokenOptions.DefaultEmailProvider)
+                .AddTokenProvider<AuthenticatorTokenProvider<CustomUser>>(TokenOptions.DefaultAuthenticatorProvider)
                 .AddDefaultUI()
                 .AddPwnedPasswordValidator<CustomUser>(options =>
                 {

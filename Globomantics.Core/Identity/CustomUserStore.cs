@@ -8,7 +8,7 @@ using Serilog;
 
 namespace Globomantics.Core.Identity
 {
-    public class CustomUserStore : IUserPasswordStore<CustomUser>, 
+    public partial class CustomUserStore : IUserPasswordStore<CustomUser>, 
                                    IUserEmailStore<CustomUser>,
                                    IUserSecurityStampStore<CustomUser>
     {
@@ -92,9 +92,11 @@ namespace Globomantics.Core.Identity
                 await _db.ExecuteAsync(
                     @"
 INSERT INTO GlobomanticsUser 
-( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp, EmailConfirmed )
+( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp, 
+    EmailConfirmed, TwoFactorEnabled )
 VALUES
-( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp, @EmailConfirmed )",
+( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp, 
+    @EmailConfirmed, @TwoFactorEnabled )",
                     user);
                 result = IdentityResult.Success;
 
@@ -130,6 +132,7 @@ SET PasswordHash = @PasswordHash
    ,Status = @Status
    ,SecurityStamp = @SecurityStamp
    ,EmailConfirmed = @EmailConfirmed
+   ,TwoFactorEnabled = @TwoFactorEnabled
 WHERE UserId = @UserId",
                     user);
                 result = IdentityResult.Success;
