@@ -11,34 +11,43 @@ namespace Globomantics.Framework.Account
 {
 
 
-    public partial class Manage
+    public partial class EnableAuthenticator
     {
 
         /// <summary>
-        /// successMessage control.
+        /// ErrorMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder successMessage;
+        protected global::System.Web.UI.WebControls.PlaceHolder ErrorMessage;
 
         /// <summary>
-        /// ChangePassword control.
+        /// FailureText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink ChangePassword;
+        protected global::System.Web.UI.WebControls.Literal FailureText;
 
         /// <summary>
-        /// CreatePassword control.
+        /// SharedKeyField control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink CreatePassword;
+        protected global::System.Web.UI.WebControls.HiddenField SharedKeyField;
+
+        /// <summary>
+        /// CodeVerification control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox CodeVerification;
     }
 }

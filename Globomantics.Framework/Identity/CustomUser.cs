@@ -12,6 +12,7 @@ namespace Globomantics.Framework.Identity
         public string LoginName { get; set; }
         public string PasswordSalt { get; set; }
         public short Status { get; set; }
+        public string AuthenticatorKey { get; set; }
         public DateTime PasswordModifiedDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
         public DateTime CreateDate { get; set; }

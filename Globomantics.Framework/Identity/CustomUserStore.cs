@@ -47,6 +47,8 @@ SET PasswordHash = @PasswordHash
    ,Status = @Status   
    ,SecurityStamp = @SecurityStamp
    ,EmailConfirmed = @EmailConfirmed
+   ,TwoFactorEnabled = @TwoFactorEnabled
+   ,AuthenticatorKey = @AuthenticatorKey
 WHERE UserId = @UserId",
                     user);
             }
@@ -128,7 +130,7 @@ WHERE UserId = @UserId",
 
         public Task<string> GetSecurityStampAsync(CustomUser user)
         {
-            return Task.FromResult(user.SecurityStamp);
+            return Task.FromResult(user.SecurityStamp ?? "");
         }
     }
 }

@@ -18,8 +18,6 @@ namespace Globomantics.Framework.Account
             return manager.HasPassword(User.Identity.GetUserId<int>());
         }
 
-        public bool HasPhoneNumber { get; private set; }
-
         public bool TwoFactorEnabled { get; private set; }
 
         public bool TwoFactorBrowserRemembered { get; private set; }
@@ -30,16 +28,7 @@ namespace Globomantics.Framework.Account
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-            HasPhoneNumber = String.IsNullOrEmpty(manager.GetPhoneNumber(User.Identity.GetUserId<int>()));
-
-            // Enable this after setting up two-factor authentientication
-            //PhoneNumber.Text = manager.GetPhoneNumber(User.Identity.GetUserId()) ?? String.Empty;
-
             TwoFactorEnabled = manager.GetTwoFactorEnabled(User.Identity.GetUserId<int>());
-
-            LoginsCount = manager.GetLogins(User.Identity.GetUserId<int>()).Count;
-
-            var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
 
             if (!IsPostBack)
             {
@@ -67,12 +56,11 @@ namespace Globomantics.Framework.Account
                         : message == "RemoveLoginSuccess" ? "The account was removed."
                         : message == "AddPhoneNumberSuccess" ? "Phone number has been added"
                         : message == "RemovePhoneNumberSuccess" ? "Phone number was removed"
-                        : String.Empty;
-                    successMessage.Visible = !String.IsNullOrEmpty(SuccessMessage);
+                        : string.Empty;
+                    successMessage.Visible = !string.IsNullOrEmpty(SuccessMessage);
                 }
             }
         }
-
 
         private void AddErrors(IdentityResult result)
         {
@@ -82,38 +70,10 @@ namespace Globomantics.Framework.Account
             }
         }
 
-        // Remove phonenumber from user
-        protected void RemovePhone_Click(object sender, EventArgs e)
-        {
-            var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
-            var result = manager.SetPhoneNumber(User.Identity.GetUserId<int>(), null);
-            if (!result.Succeeded)
-            {
-                return;
-            }
-            var user = manager.FindById(User.Identity.GetUserId<int>());
-            if (user != null)
-            {
-                signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
-                Response.Redirect("/Account/Manage?m=RemovePhoneNumberSuccess");
-            }
-        }
-
-        // DisableTwoFactorAuthentication
         protected void TwoFactorDisable_Click(object sender, EventArgs e)
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
             manager.SetTwoFactorEnabled(User.Identity.GetUserId<int>(), false);
-
-            Response.Redirect("/Account/Manage");
-        }
-
-        //EnableTwoFactorAuthentication 
-        protected void TwoFactorEnable_Click(object sender, EventArgs e)
-        {
-            var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            manager.SetTwoFactorEnabled(User.Identity.GetUserId<int>(), true);
 
             Response.Redirect("/Account/Manage");
         }

@@ -27,7 +27,7 @@ namespace Globomantics.Framework.Account
             }
             var userFactors = manager.GetValidTwoFactorProviders(userId);
             Providers.DataSource = userFactors.Select(x => x).ToList();
-            Providers.DataBind();            
+            Providers.DataBind();
         }
 
         protected void CodeSubmit_Click(object sender, EventArgs e)
