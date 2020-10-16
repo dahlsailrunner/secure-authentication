@@ -25,9 +25,9 @@ namespace Globomantics.Framework.Identity
             await _db.ExecuteAsync(
                 @"
 INSERT INTO GlobomanticsUser 
-( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp, EmailConfirmed )
+( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp, EmailConfirmed, AccessFailedCount, LockoutEnd, LockoutEnabled )
 VALUES
-( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp, @EmailConfirmed )",
+( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp, @EmailConfirmed, @AccessFailedCount, LockoutEnd, LockoutEnabled )",
                 user);
         }
 
@@ -49,6 +49,9 @@ SET PasswordHash = @PasswordHash
    ,EmailConfirmed = @EmailConfirmed
    ,TwoFactorEnabled = @TwoFactorEnabled
    ,AuthenticatorKey = @AuthenticatorKey
+   ,AccessFailedCount = @AccessFailedCount
+   ,LockoutEnd = @LockoutEnd
+   ,LockoutEnabled = @LockoutEnabled
 WHERE UserId = @UserId",
                     user);
             }

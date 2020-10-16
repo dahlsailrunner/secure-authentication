@@ -62,8 +62,8 @@ namespace Globomantics.Framework
 
             // Configure user lockout defaults
             manager.UserLockoutEnabledByDefault = true;
-            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            manager.MaxFailedAccessAttemptsBeforeLockout = 5;
+            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(2);  //5
+            manager.MaxFailedAccessAttemptsBeforeLockout = 3; //5 
 
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
@@ -76,6 +76,21 @@ namespace Globomantics.Framework
             }
 
             return manager;
+        }
+
+        public override async Task<IdentityResult> AccessFailedAsync(int userId)
+        {
+            var user = await Store.FindByIdAsync(userId);
+            if (!user.LockoutEnabled)
+            {
+                if (Store is IUserLockoutStore<CustomUser, int> lockoutStore)
+                {
+                    await lockoutStore.IncrementAccessFailedCountAsync(user);
+                    await lockoutStore.UpdateAsync(user);
+                    return new IdentityResult();
+                }
+            }
+            return await base.AccessFailedAsync(userId);
         }
 
         protected override async Task<bool> VerifyPasswordAsync(IUserPasswordStore<CustomUser, int> store, CustomUser user,

@@ -592,6 +592,7 @@
     </Compile>
     <Compile Include="Identity\CustomAuthenticatorTokenProvider.cs" />
     <Compile Include="Identity\CustomPasswordValidator.cs" />
+    <Compile Include="Identity\CustomUserManager.cs" />
     <Compile Include="Identity\CustomUserStore-TwoFactor.cs" />
     <Compile Include="Identity\CustomPasswordHasher.cs" />
     <Compile Include="Identity\CustomUser.cs" />
