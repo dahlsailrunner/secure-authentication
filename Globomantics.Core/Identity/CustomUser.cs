@@ -17,6 +17,5 @@ namespace Globomantics.Core.Identity
         public override string NormalizedEmail => LoginName.ToUpperInvariant();
         public override string Email => LoginName;
         public override string UserName => LoginName;
-        public override bool LockoutEnabled => true;
     }
 }

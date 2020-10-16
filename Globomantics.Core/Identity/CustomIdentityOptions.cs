@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace Globomantics.Core.Identity
@@ -16,6 +17,10 @@ namespace Globomantics.Core.Identity
 
             options.SignIn.RequireConfirmedEmail = true;
             options.SignIn.RequireConfirmedAccount = true;
+
+            options.Lockout.MaxFailedAccessAttempts = 3;  // 5
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); 
+            options.Lockout.AllowedForNewUsers = true;
         }
     }
 }

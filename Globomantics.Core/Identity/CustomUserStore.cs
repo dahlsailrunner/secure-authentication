@@ -93,10 +93,10 @@ namespace Globomantics.Core.Identity
                     @"
 INSERT INTO GlobomanticsUser 
 ( LoginName, PasswordHash, PasswordModifiedDate, LastLoginDate, CreateDate, Status, SecurityStamp, 
-    EmailConfirmed, TwoFactorEnabled )
+    EmailConfirmed, TwoFactorEnabled, AccessFailedCount, LockoutEnd, LockoutEnabled )
 VALUES
 ( @LoginName, @PasswordHash, @PasswordModifiedDate,@LastLoginDate, @CreateDate, 1, @SecurityStamp, 
-    @EmailConfirmed, @TwoFactorEnabled )",
+    @EmailConfirmed, @TwoFactorEnabled, @AccessFailedCount, @LockoutEnd, @LockoutEnabled )",
                     user);
                 result = IdentityResult.Success;
 
@@ -133,6 +133,9 @@ SET PasswordHash = @PasswordHash
    ,SecurityStamp = @SecurityStamp
    ,EmailConfirmed = @EmailConfirmed
    ,TwoFactorEnabled = @TwoFactorEnabled
+   ,AccessFailedCount = @AccessFailedCount
+   ,LockoutEnd = @LockoutEnd
+   ,LockoutEnabled = @LockoutEnabled
 WHERE UserId = @UserId",
                     user);
                 result = IdentityResult.Success;
@@ -172,9 +175,10 @@ WHERE UserId = @UserId",
             {
                 throw new ArgumentNullException(nameof(normalizedUserName));
             }
-            return await _db.QuerySingleOrDefaultAsync<CustomUser>(
+            var result = await _db.QuerySingleOrDefaultAsync<CustomUser>(
                 "SELECT * FROM GlobomanticsUser WHERE LoginName = @LoginName",
                 new { LoginName = normalizedUserName });
+            return result;
         }
 
         public Task SetPasswordHashAsync(CustomUser user, string passwordHash, CancellationToken cancellationToken)

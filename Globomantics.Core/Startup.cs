@@ -45,7 +45,8 @@ namespace Globomantics.Core
 
             services.AddIdentityCore<CustomUser>()
                 .AddSignInManager<SignInManager<CustomUser>>()
-                .AddUserManager<UserManager<CustomUser>>()
+                //.AddUserManager<UserManager<CustomUser>>()
+                .AddUserManager<CustomUserManager>()
                 .AddUserStore<CustomUserStore>()
                 // not including phone number provider
                 .AddTokenProvider<DataProtectorTokenProvider<CustomUser>>(TokenOptions.DefaultProvider)
@@ -80,7 +81,18 @@ namespace Globomantics.Core
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-            app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
+                {
+                    diagCtx.Set("ClientIP", httpCtx.Connection.RemoteIpAddress);
+                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"]);
+                    if (httpCtx.User.Identity.IsAuthenticated)
+                    {
+                        diagCtx.Set("UserName", httpCtx.User.Identity?.Name);
+                    }
+                };
+            });
 
             app.UseRouting();
             app.UseAuthentication();

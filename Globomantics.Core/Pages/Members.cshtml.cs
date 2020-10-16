@@ -3,10 +3,12 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using Globomantics.Core.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Globomantics.Core.Pages
 {
+    [Authorize]
     public class MembersModel : PageModel
     {
         private readonly IDbConnection _db;
@@ -39,7 +41,6 @@ WHERE c.Id = @CompanyId";
                 return currComp;
 
             }, new {companyId}).FirstOrDefault();
-           
         }
     }
 }

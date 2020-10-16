@@ -19,6 +19,8 @@ namespace Globomantics.Framework
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.AppSettings()
                 .Enrich.WithHttpRequestId()
+                .Enrich.WithHttpRequestUserAgent()
+                .Enrich.WithHttpRequestClientHostIP()
                 .Enrich.WithHttpRequestNumber()
                 .Enrich.WithUserName()
                 .Enrich.WithProperty("Assembly", name)
