@@ -2,10 +2,15 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2><%: Title %></h2>
-    <h3><% = Company.Name %></h3>
+    <h3><% = Company?.Name %></h3>
     <ul class="list-group">
-    <% foreach (var member in Company.Members) { %>
-            <li class="list-group-item"><%= member.MemberEmail %></li>
-    <% } %>
+        <% if (Company != null && Company.Members?.Count > 0)
+           { %>
+            <% foreach (var member in Company.Members)
+               { %>
+                    <li class="list-group-item"><%= member.MemberEmail %></li>
+            <% }
+            } %>
+
     </ul>
 </asp:Content>

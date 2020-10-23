@@ -1,11 +1,14 @@
 using System;
 using System.Data;
 using System.Net.Http;
+using Globomantics.Core.Authorization;
 using Globomantics.Core.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +36,19 @@ namespace Globomantics.Core
             {
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            }).AddIdentityCookies();
+            }).AddIdentityCookies(o =>
+            {
+                o.ApplicationCookie.Configure(opts =>
+                {
+                    opts.LoginPath = "/Identity/Account/Login";
+                    opts.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                });
+                o.ExternalCookie.Configure(opts =>
+                {
+                    opts.LoginPath = "/Identity/Account/Login";
+                    opts.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                });
+            });
 
             const int considerPwned = 1000;
             services.AddPwnedPasswordHttpClient(minimumFrequencyToConsiderPwned: considerPwned)
@@ -99,7 +114,7 @@ namespace Globomantics.Core
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapRazorPages().RequireAuthorization();
             });
         }
     }

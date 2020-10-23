@@ -46,7 +46,7 @@ namespace Globomantics.Core.Areas.Identity.Pages.Account
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
-            if (user == null)
+            if (user == null && !User.Identity.IsAuthenticated)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             }

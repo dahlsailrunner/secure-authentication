@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Globomantics.Core.Pages
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class MembersModel : PageModel
     {
         private readonly IDbConnection _db;
@@ -19,8 +19,11 @@ namespace Globomantics.Core.Pages
             _db = db;
         }
 
-        public void OnGet(int companyId)
+        public void OnGet()
         {
+            var companyId = User.Claims
+                .FirstOrDefault(c => c.Type == "CompanyId")?.Value;
+
             var compDict = new Dictionary<int, Company>();
             var sql = @"
 SELECT * 

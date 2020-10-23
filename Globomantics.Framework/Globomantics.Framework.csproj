@@ -563,6 +563,9 @@
       <DependentUpon>VerifyPhoneNumber.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="AuthenticatedPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Members.aspx.cs">
       <DependentUpon>Members.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
