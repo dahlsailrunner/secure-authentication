@@ -50,6 +50,20 @@ namespace Globomantics.Core
                 });
             });
 
+            services.AddSingleton<IAuthorizationPolicyProvider, CustomPolicyProvider>();
+            services.AddScoped<IAuthorizationHandler, RightRequirementHandler>();
+            services.AddScoped<IAuthorizationHandler, MfaChallengeRequirementHandler>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("MfaRequired",
+                    p =>
+                    {
+                        p.RequireClaim("CompanyId");
+                        p.RequireClaim("MfaEnabled", "True");
+                    });
+            });
+
             const int considerPwned = 1000;
             services.AddPwnedPasswordHttpClient(minimumFrequencyToConsiderPwned: considerPwned)
                 .AddTransientHttpErrorPolicy(p => p.RetryAsync(3))

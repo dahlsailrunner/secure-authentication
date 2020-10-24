@@ -2,7 +2,7 @@
 
 namespace Globomantics.Core.Authorization
 {
-    public class MfaRequirement : IAuthorizationRequirement
+    public class MfaChallengeRequirement : IAuthorizationRequirement
     {
         
     }

@@ -2,13 +2,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
+using Globomantics.Core.Authorization;
 using Globomantics.Core.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Globomantics.Core.Pages
 {
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
+    //[Authorize(Policy = "MfaRequired")]
+    //[RequiredRight("ViewMembers")]
+    [RequiresMfaChallenge]
     public class MembersModel : PageModel
     {
         private readonly IDbConnection _db;
