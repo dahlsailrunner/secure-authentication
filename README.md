@@ -7,7 +7,8 @@ Core web applications.  The content here would apply to:
 * WebForms
 
 # Getting Started
-**NOTE:** This repo is the code behind my Pluralsight course [Secure User Account and Authentication Practices in ASP.NET and ASP.NET Core]().  That course evolves this code from its starting point, goes over all of the concepts / notes that you see below, and discusses security considerations for all of this - like credential stuffing, invalid redirects, password reset practices, and more. 
+**NOTE:** This repo is the code behind my Pluralsight course [Secure User Account and Authentication Practices in ASP.NET and 
+ASP.NET Core](https://app.pluralsight.com/library/courses/secure-account-authentication-practices-asp-dot-net-core).  That course evolves this code from its starting point, goes over all of the concepts / notes that you see below, and discusses security considerations for all of this - like credential stuffing, invalid redirects, password reset practices, and more. 
 
 ## Database
 The fictional scenario is that we have an existing database and will be using it 
